@@ -26,6 +26,8 @@
  *  https://www.ee.columbia.edu/~ronw/code/MEAPsoft/doc/html/FFT_8java-source.html
  */
 
+package com.example.desperados.ex3_sensor;
+
 public class FFT {
 
   int n, m;
