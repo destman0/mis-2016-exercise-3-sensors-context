@@ -13,28 +13,28 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
         android:id="@+id/vt_x"
-    android:text="Hello World!" />
+     />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/vt_y"
         android:layout_below="@+id/vt_x"
-        android:text="Hello World!" />
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/vt_z"
         android:layout_below="@+id/vt_y"
-        android:text="Hello World!" />
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/vt_m"
         android:layout_below="@+id/vt_z"
-        android:text="Hello World!" />
+         />
 
 
 
