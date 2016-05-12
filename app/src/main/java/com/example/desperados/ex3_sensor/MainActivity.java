@@ -1,6 +1,7 @@
 //The following sources were used as a reference:
 //https://developer.android.com/guide/topics/sensors/sensors_motion.html
 //https://examples.javacodegeeks.com/android/core/widget/seekbar/android-seekbar-example/
+//http://developer.android.com/training/custom-views/create-view.html
 
 package com.example.desperados.ex3_sensor;
 
