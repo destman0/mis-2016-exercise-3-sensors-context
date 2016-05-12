@@ -36,7 +36,14 @@
         android:layout_below="@+id/vt_z"
          />
 
-
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="50"
+        android:id="@+id/sb_sensor"
+        android:layout_below="@+id/vt_m"
+        />
 
 
 </RelativeLayout>
