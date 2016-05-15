@@ -9,6 +9,7 @@ import android.view.View;
 
 
 
+
 /**
  * Created by Dest 0 on 13/05/2016.
  */
@@ -19,7 +20,7 @@ public class SensorGraph extends View{
     private final int textColor = Color.WHITE;
     // defines paint and canvas
     private Paint drawPaint, textPaint;
-    public float x1, x2, x3, x4, xcent, ycent;
+    public float x1, x2, x3, x4;
 
 
 
@@ -36,6 +37,8 @@ public class SensorGraph extends View{
     @Override
     protected void onDraw(Canvas canvas) {
 
+
+        float xcent = canvas.getWidth()/2;
         canvas.drawARGB(255, 0, 0, 0);
         drawPaint.setColor(Color.RED);
         canvas.drawText("X: "+x1, 10, 100, textPaint);

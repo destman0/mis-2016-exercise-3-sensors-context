@@ -4,6 +4,8 @@
 //http://developer.android.com/training/custom-views/create-view.html
 //https://github.com/codepath/android_guides/wiki/Basic-Painting-with-Views
 //http://code.tutsplus.com/tutorials/android-sdk-creating-custom-views--mobile-14548
+//http://www.cs.dartmouth.edu/~campbell/cs65/lecture22/lecture22.html
+//http://stackoverflow.com/questions/1963806/is-there-a-fixed-sized-queue-which-removes-excessive-elements
 
 package com.example.desperados.ex3_sensor;
 
@@ -24,17 +26,17 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
+import org.apache.commons.collections4.queue.CircularFifoQueue;
+
 
 public class MainActivity extends Activity implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mSensor;
-    private SeekBar sb_sensor;
+    private SeekBar sb_sensor, sb_fft;
     private SensorGraph sgraph;
-
-
-
-
-
+    private FFTGraph fftgraph;
+    public static CircularFifoQueue<Double> mag = new CircularFifoQueue<Double>(64);
+    //public static int zlp = 0;
 
 
 
@@ -43,11 +45,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeVariables();
-        Display mDisp = getWindowManager().getDefaultDisplay();
-        Point mDispSize = new Point();
-        mDisp.getSize(mDispSize);
-        sgraph.xcent = mDispSize.x/2;
-        sgraph.ycent = mDispSize.y/2;
 
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -93,16 +90,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             }
 
-
-
-
-
         });
     }
-
-
-
-
 
 
 
@@ -115,30 +104,16 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public final void onSensorChanged(SensorEvent event) {
 
-        // In this example, alpha is calculated as t / (t + dT),
-        // where t is the low-pass filter's time-constant and
-        // dT is the event delivery rate.
-
-        //final float alpha = 0.8;
-
-        // Isolate the force of gravity with the low-pass filter.
-       // gravity[0] = alpha * gravity[0] + (1 - alpha) * event.values[0];
-        //gravity[1] = alpha * gravity[1] + (1 - alpha) * event.values[1];
-        //gravity[2] = alpha * gravity[2] + (1 - alpha) * event.values[2];
-
-        // Remove the gravity contribution with the high-pass filter.
-       // linear_acceleration[0] = event.values[0] - gravity[0];
-        //linear_acceleration[1] = event.values[1] - gravity[1];
-        //linear_acceleration[2] = event.values[2] - gravity[2];
-
+        //accelerometer visualization
         sgraph.x1=event.values[0];
         sgraph.x2=event.values[1];
         sgraph.x3=event.values[2];
         sgraph.x4 = (float)Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2));
         sgraph.invalidate();
 
-
-        //Log.i("i am triggered", ""+event.values[0]);
+        //fft
+        mag.add(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2)));
+        fftgraph.invalidate();
 
     }
 
@@ -158,7 +133,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     private void initializeVariables() {
         sb_sensor = (SeekBar) findViewById(R.id.sb_sensor);
+        sb_fft = (SeekBar) findViewById(R.id.sb_fft );
         sgraph = (SensorGraph) findViewById(R.id.SensorGraph);
+        fftgraph = (FFTGraph) findViewById(R.id.FFTGraph);
 
 
     }
