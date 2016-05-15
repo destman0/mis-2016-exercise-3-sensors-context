@@ -38,13 +38,13 @@ public class SensorGraph extends View{
 
         canvas.drawARGB(255, 0, 0, 0);
         drawPaint.setColor(Color.RED);
-        canvas.drawText("X:", 10, 100, textPaint);
+        canvas.drawText("X: "+x1, 10, 100, textPaint);
         canvas.drawLine(xcent,100,xcent+x1*10,100,drawPaint);
         drawPaint.setColor(Color.GREEN);
-        canvas.drawText("Y:", 10, 200, textPaint);
+        canvas.drawText("Y: "+x2, 10, 200, textPaint);
         canvas.drawLine(xcent,200,xcent+x2*10,200,drawPaint);
         drawPaint.setColor(Color.BLUE);
-        canvas.drawText("Z:", 10, 300, textPaint);
+        canvas.drawText("Z: "+x3, 10, 300, textPaint);
         canvas.drawLine(xcent,300,xcent+x3*10,300,drawPaint);
         drawPaint.setColor(Color.WHITE);
         canvas.drawText("Magnitude:", 10, 400, textPaint);

@@ -28,7 +28,6 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mSensor;
-    private static TextView vt_x, vt_y, vt_z, vt_m;
     private SeekBar sb_sensor;
     private SensorGraph sgraph;
 
@@ -61,7 +60,6 @@ public class MainActivity extends Activity implements SensorEventListener {
             // Failure! No accelerometer.
         }
 
-        vt_m.setText("Covered: " + sb_sensor.getProgress() + "/" + sb_sensor.getMax());
 
         sb_sensor.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             int progress = 0;
@@ -69,7 +67,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                vt_m.setText("Covered: " + progress + "/" + seekBar.getMax());
                 Toast.makeText(getApplicationContext(), "Stopped tracking seekbar", Toast.LENGTH_SHORT).show();
                 mSensorManager.unregisterListener(MainActivity.this);
                 mSensorManager.registerListener(MainActivity.this, mSensor, (100-progress)*2000 );
@@ -134,11 +131,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         //linear_acceleration[1] = event.values[1] - gravity[1];
         //linear_acceleration[2] = event.values[2] - gravity[2];
 
-        vt_x.setText(Float.toString(event.values[0]));
         sgraph.x1=event.values[0];
-        vt_y.setText(Float.toString(event.values[1]));
         sgraph.x2=event.values[1];
-        vt_z.setText(Float.toString(event.values[2]));
         sgraph.x3=event.values[2];
         sgraph.x4 = (float)Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2));
         sgraph.invalidate();
@@ -163,13 +157,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 
     private void initializeVariables() {
-        vt_x = (TextView)findViewById(R.id.vt_x);
-        vt_y = (TextView)findViewById(R.id.vt_y);
-        vt_z = (TextView)findViewById(R.id.vt_z);
-        vt_m = (TextView)findViewById(R.id.vt_m);
         sb_sensor = (SeekBar) findViewById(R.id.sb_sensor);
         sgraph = (SensorGraph) findViewById(R.id.SensorGraph);
-
 
 
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,33 +7,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.desperados.ex3_sensor.MainActivity">
+    tools:context="com.example.desperados.ex3_sensor.MainActivity"
+    android:orientation="vertical">
 
-    <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-        android:id="@+id/vt_x"
-     />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/vt_y"
-        android:layout_below="@+id/vt_x"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/vt_z"
-        android:layout_below="@+id/vt_y"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/vt_m"
-        android:layout_below="@+id/vt_z"
+    <com.example.desperados.ex3_sensor.SensorGraph
+        android:id="@+id/SensorGraph"
+        android:layout_width="fill_parent"
+        android:layout_height="230dp"
          />
 
     <SeekBar
@@ -42,14 +23,20 @@
         android:max="100"
         android:progress="50"
         android:id="@+id/sb_sensor"
-        android:layout_below="@+id/vt_m"
         />
 
-    <com.example.desperados.ex3_sensor.SensorGraph
-        android:id="@+id/SensorGraph"
+    <com.example.desperados.ex3_sensor.FFTGraph
+        android:id="@+id/FFTGraph"
         android:layout_width="fill_parent"
-        android:layout_height="300dp"
-        android:layout_below="@+id/sb_sensor" />
+        android:layout_height="230dp"
+         />
 
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="50"
+        android:id="@+id/sb_fft"
+        />
 
-</RelativeLayout>
+</LinearLayout>
