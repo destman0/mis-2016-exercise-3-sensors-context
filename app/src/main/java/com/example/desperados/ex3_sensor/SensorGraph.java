@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 
+
 /**
  * Created by Dest 0 on 13/05/2016.
  */
@@ -17,7 +18,8 @@ public class SensorGraph extends View{
     private final int paintColor = Color.RED;
     // defines paint and canvas
     private Paint drawPaint;
-    public float x1, x2, x3, x4;
+    public float x1, x2, x3, x4, xcent, ycent;
+
 
 
     public SensorGraph(Context context, AttributeSet attrs) {
@@ -32,13 +34,16 @@ public class SensorGraph extends View{
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawLine(200,50,x1*10,50,drawPaint);
+
+        canvas.drawARGB(255, 0, 0, 0);
+        drawPaint.setColor(Color.RED);
+        canvas.drawLine(xcent,100,xcent+x1*10,100,drawPaint);
         drawPaint.setColor(Color.GREEN);
-        canvas.drawLine(200,100,x2*10,100,drawPaint);
+        canvas.drawLine(xcent,200,xcent+x2*10,200,drawPaint);
         drawPaint.setColor(Color.BLUE);
-        canvas.drawLine(200,150,x3*10,150,drawPaint);
-        drawPaint.setColor(Color.BLACK);
-        canvas.drawLine(200,200,x4*10,200,drawPaint);
+        canvas.drawLine(xcent,300,xcent+x3*10,300,drawPaint);
+        drawPaint.setColor(Color.WHITE);
+        canvas.drawLine(xcent,400,xcent+x4*10,400,drawPaint);
 
     }
 

@@ -9,6 +9,7 @@ package com.example.desperados.ex3_sensor;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,6 +17,8 @@ import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
+import android.util.DisplayMetrics;
 import android.widget.TextView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -41,6 +44,11 @@ public class MainActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeVariables();
+        Display mDisp = getWindowManager().getDefaultDisplay();
+        Point mDispSize = new Point();
+        mDisp.getSize(mDispSize);
+        sgraph.xcent = mDispSize.x/2;
+        sgraph.ycent = mDispSize.y/2;
 
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -109,6 +117,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
+
         // In this example, alpha is calculated as t / (t + dT),
         // where t is the low-pass filter's time-constant and
         // dT is the event delivery rate.
