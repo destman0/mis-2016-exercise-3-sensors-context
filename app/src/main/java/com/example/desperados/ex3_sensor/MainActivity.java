@@ -24,7 +24,7 @@ import android.util.DisplayMetrics;
 import android.widget.TextView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Toast;
+
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
@@ -35,8 +35,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     private SeekBar sb_sensor, sb_fft;
     private SensorGraph sgraph;
     private FFTGraph fftgraph;
+    public static int fsize=64;
     public static CircularFifoQueue<Double> mag = new CircularFifoQueue<Double>(64);
-    //public static int zlp = 0;
+
 
 
 
@@ -64,33 +65,43 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(getApplicationContext(), "Stopped tracking seekbar", Toast.LENGTH_SHORT).show();
                 mSensorManager.unregisterListener(MainActivity.this);
                 mSensorManager.registerListener(MainActivity.this, mSensor, (100-progress)*2000 );
-                Log.i("Progress on stop", ""+progress);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(getApplicationContext(), "Started tracking seekbar", Toast.LENGTH_SHORT).show();
-                //mSensorManager.unregisterListener(MainActivity.this);
-                //mSensorManager.registerListener(MainActivity.this, mSensor, 200000);
-                Log.i("Progress on start", ""+progress);
 
             }
 
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
-                progress = progresValue;
-               // Toast.makeText(getApplicationContext(), "Changing seekbar's progress", Toast.LENGTH_SHORT).show();
-                //Log.i("i am triggered", ""+mSensor.getMinDelay());
-                //mSensorManager.unregisterListener(MainActivity.this);
-                //mSensorManager.registerListener(MainActivity.this, mSensor,progress*200 );
-                Log.i("Progress on change", ""+progress);
-
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                progress = progressValue;
             }
 
         });
+
+        sb_fft.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            int progress = 6;
+
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                fsize = (int)Math.pow(2,progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                progress = progressValue;
+            }
+
+        });
+
     }
 
 
@@ -104,15 +115,18 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public final void onSensorChanged(SensorEvent event) {
 
+
+
         //accelerometer visualization
         sgraph.x1=event.values[0];
         sgraph.x2=event.values[1];
         sgraph.x3=event.values[2];
-        sgraph.x4 = (float)Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2));
+        double magnitude = Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2));
+        sgraph.x4 = (float)magnitude;
         sgraph.invalidate();
 
         //fft
-        mag.add(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2)));
+        mag.add(magnitude);
         fftgraph.invalidate();
 
     }

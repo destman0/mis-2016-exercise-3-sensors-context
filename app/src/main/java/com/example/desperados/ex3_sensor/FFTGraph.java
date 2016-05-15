@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+import android.content.Context;
 
 /**
  * Created by Dest 0 on 13/05/2016.
@@ -22,41 +24,51 @@ public class FFTGraph extends View {
 
 
 
+
+
     public FFTGraph(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupPaint();
-        fft = new FFT(64);
+
+
+
 
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        int size = MainActivity.fsize;
+        int buffer = MainActivity.mag.size();
 
-        float step = canvas.getWidth()/64;
+        float step = canvas.getWidth() / size;
         float height = canvas.getHeight();
+        float center = canvas.getWidth()/2;
 
-        canvas.drawARGB(255, 0, 255, 0);
-        /*drawPaint.setColor(Color.RED);
-        canvas.drawText("FFT", 10, 100, textPaint);
-        canvas.drawLine(300,100,600,100,drawPaint);*/
-        //Log.i("Array", ""+MainActivity.mag.size());
+        canvas.drawARGB(255, 173, 216, 230);
 
-        if (MainActivity.mag.size()==64) {
+        if (buffer >= size) {
 
-            double re[] = new double [64];
-            double im[] = new double[64];
-            double res[] = new double [64];
-            for (int i = 0; i < 64; i++)
+            canvas.drawText("Window Size: "+size, center, 100, textPaint);
+            fft = new FFT(size);
+            double re[] = new double[size];
+            double im[] = new double[size];
+            double res[] = new double[size];
+            for (int i = 0; i < size; i++)
+            {
                 re[i] = MainActivity.mag.get(i);
-            Log.i("Array", ""+re);
+                im[i] = 0;
+             }
+
             fft.fft(re, im);
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < size; i++) {
                 res[i] = Math.sqrt(Math.pow(re[i], 2) + Math.pow(im[i], 2));
-            for(int i=1; i < 64; i++)
+                if(i > 0)
                 canvas.drawLine((i-1)*step,height-(float)res[i-1],i*step,height-(float)res[i],drawPaint);
+            }
 
-
-
+        }
+        else {
+            canvas.drawText("Filling the buffer for FFT",step, 100, textPaint);
         }
     }
 
@@ -73,7 +85,7 @@ public class FFTGraph extends View {
 
         textPaint = new Paint();
         textPaint.setColor(textColor);
-        textPaint.setTextSize(50);
+        textPaint.setTextSize(40);
 
     }
 
