@@ -2,6 +2,8 @@
 //https://developer.android.com/guide/topics/sensors/sensors_motion.html
 //https://examples.javacodegeeks.com/android/core/widget/seekbar/android-seekbar-example/
 //http://developer.android.com/training/custom-views/create-view.html
+//https://github.com/codepath/android_guides/wiki/Basic-Painting-with-Views
+//http://code.tutsplus.com/tutorials/android-sdk-creating-custom-views--mobile-14548
 
 package com.example.desperados.ex3_sensor;
 
@@ -25,6 +27,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Sensor mSensor;
     private static TextView vt_x, vt_y, vt_z, vt_m;
     private SeekBar sb_sensor;
+    private SensorGraph sgraph;
 
 
 
@@ -123,9 +126,14 @@ public class MainActivity extends Activity implements SensorEventListener {
         //linear_acceleration[2] = event.values[2] - gravity[2];
 
         vt_x.setText(Float.toString(event.values[0]));
+        sgraph.x1=event.values[0];
         vt_y.setText(Float.toString(event.values[1]));
+        sgraph.x2=event.values[1];
         vt_z.setText(Float.toString(event.values[2]));
-        //vt_m.setText(Double.toString(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2))));
+        sgraph.x3=event.values[2];
+        sgraph.x4 = (float)Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2));
+        sgraph.invalidate();
+
 
         //Log.i("i am triggered", ""+event.values[0]);
 
@@ -151,6 +159,9 @@ public class MainActivity extends Activity implements SensorEventListener {
         vt_z = (TextView)findViewById(R.id.vt_z);
         vt_m = (TextView)findViewById(R.id.vt_m);
         sb_sensor = (SeekBar) findViewById(R.id.sb_sensor);
+        sgraph = (SensorGraph) findViewById(R.id.SensorGraph);
+
+
 
     }
 

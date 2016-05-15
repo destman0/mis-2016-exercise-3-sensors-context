@@ -45,5 +45,11 @@
         android:layout_below="@+id/vt_m"
         />
 
+    <com.example.desperados.ex3_sensor.SensorGraph
+        android:id="@+id/SensorGraph"
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/sb_sensor" />
+
 
 </RelativeLayout>
