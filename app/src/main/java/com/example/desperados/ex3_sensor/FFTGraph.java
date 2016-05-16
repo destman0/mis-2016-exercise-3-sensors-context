@@ -47,6 +47,7 @@ public class FFTGraph extends View {
         if (buffer >= size) {
 
             canvas.drawText("Window Size: "+size, center, 100, textPaint);
+            canvas.drawText(""+size, center, 150, textPaint);
             fft = new FFT(size);
             double re[] = new double[size];
             double im[] = new double[size];
@@ -81,6 +82,7 @@ public class FFTGraph extends View {
         //When the application is started, or the user changed the size of FFT window, it takes time to fill the buffer
         else {
             canvas.drawText("Filling the buffer for FFT",step, 100, textPaint);
+            canvas.drawText("Please wait...",step, 150, textPaint);
         }
 
         //When the buffer of average values from FFT is full, calculating the averages, and...
