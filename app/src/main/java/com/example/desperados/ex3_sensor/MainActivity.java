@@ -9,6 +9,8 @@
 //https://developer.android.com/guide/topics/ui/notifiers/notifications.html
 
 
+//The icons are taken from IconFinder.com under Creative Commons licence (Non-commercial)
+
 package com.example.desperados.ex3_sensor;
 
 import android.app.Activity;
@@ -44,6 +46,12 @@ public class MainActivity extends Activity implements SensorEventListener {
     private FFTGraph fftgraph;
     public static int fsize=32;
     public static CircularFifoQueue<Double> mag = new CircularFifoQueue<Double>(64);
+    public static int state = 0, oldstate = 0;
+    NotificationCompat.Builder mBuilder;
+    NotificationManager mNotificationManager;
+    int mId = 001;
+
+
 
 
 
@@ -65,34 +73,21 @@ public class MainActivity extends Activity implements SensorEventListener {
             // Failure! No accelerometer.
         }
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.tvseat)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MainActivity.class);
 
-        // The stack builder object will contain an artificial back stack for the
-        // started Activity.
-        // This ensures that navigating backward from the Activity leads out of
-        // your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
-        // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
+         mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.sand)
+                        .setContentTitle("Current Activity")
+                        .setOngoing(true)
+                        .setContentText("Analyzing your Activity");
+
+
+        mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         // mId allows you to update the notification later on.
-        int mId = 001;
         mNotificationManager.notify(mId, mBuilder.build());
+
 
 
 
@@ -169,6 +164,28 @@ public class MainActivity extends Activity implements SensorEventListener {
         mag.add(magnitude);
         fftgraph.invalidate();
 
+        if(state!=oldstate) {
+            if (state == 1) {
+                mBuilder.setContentText("You are sitting");
+                mBuilder.setSmallIcon(R.drawable.tvseat);
+                mNotificationManager.notify(mId, mBuilder.build());
+                oldstate = state;
+            }
+
+            if (state == 2) {
+                mBuilder.setContentText("You are walking");
+                mBuilder.setSmallIcon(R.drawable.walking);
+                mNotificationManager.notify(mId, mBuilder.build());
+                oldstate = state;
+            }
+
+            if (state == 3) {
+                mBuilder.setContentText("You are running");
+                mBuilder.setSmallIcon(R.drawable.runningman);
+                mNotificationManager.notify(mId, mBuilder.build());
+                oldstate = state;
+            }
+        }
     }
 
     @Override
