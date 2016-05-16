@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private SeekBar sb_sensor, sb_fft;
     private SensorGraph sgraph;
     private FFTGraph fftgraph;
-    public static int fsize=64;
+    public static int fsize=32;
     public static CircularFifoQueue<Double> mag = new CircularFifoQueue<Double>(64);
 
 
@@ -127,6 +127,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 fsize = (int)Math.pow(2,progress);
+                mag = new CircularFifoQueue<Double>(fsize);
             }
 
             @Override

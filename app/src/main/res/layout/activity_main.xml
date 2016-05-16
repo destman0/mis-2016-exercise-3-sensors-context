@@ -34,8 +34,8 @@
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="6"
-        android:progress="6"
+        android:max="9"
+        android:progress="5"
         android:id="@+id/sb_fft"
         />
 
