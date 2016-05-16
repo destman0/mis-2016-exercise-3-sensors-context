@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Toast;
 import android.content.Context;
 
+import org.apache.commons.collections4.queue.CircularFifoQueue;
+
 /**
  * Created by Dest 0 on 13/05/2016.
  */
@@ -21,6 +23,8 @@ public class FFTGraph extends View {
     // defines paint and canvas
     private Paint drawPaint, textPaint;
     FFT fft;
+    public static CircularFifoQueue<Double> av = new CircularFifoQueue<Double>(500);
+    public static CircularFifoQueue<Double> max = new CircularFifoQueue<Double>(500);
 
 
 
@@ -53,6 +57,9 @@ public class FFTGraph extends View {
             double re[] = new double[size];
             double im[] = new double[size];
             double res[] = new double[size];
+            double maximum = 0;
+            double sum =0;
+            double average = 0;
             for (int i = 0; i < size; i++)
             {
                 re[i] = MainActivity.mag.get(i);
@@ -62,9 +69,18 @@ public class FFTGraph extends View {
             fft.fft(re, im);
             for (int i = 0; i < size; i++) {
                 res[i] = Math.sqrt(Math.pow(re[i], 2) + Math.pow(im[i], 2));
+                sum = sum + res[i];
+                if(res[i]>maximum)
+                    maximum = res[i];
                 if(i > 0)
                 canvas.drawLine((i-1)*step,height-(float)res[i-1],i*step,height-(float)res[i],drawPaint);
             }
+            average = sum / size;
+            Log.i("average",""+average);
+            Log.i("maximum",""+maximum);
+            av.add(average);
+            max.add(maximum);
+
 
         }
         else {
