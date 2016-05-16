@@ -7,6 +7,8 @@
 //http://www.cs.dartmouth.edu/~campbell/cs65/lecture22/lecture22.html
 //http://stackoverflow.com/questions/1963806/is-there-a-fixed-sized-queue-which-removes-excessive-elements
 //https://developer.android.com/guide/topics/ui/notifiers/notifications.html
+//http://stackoverflow.com/questions/5693997/android-how-to-create-an-ongoing-notification
+//http://stackoverflow.com/questions/14885368/update-text-of-notification-not-entire-notification
 
 
 //The icons are taken from IconFinder.com under Creative Commons licence (Non-commercial)
@@ -15,24 +17,16 @@ package com.example.desperados.ex3_sensor;
 
 import android.app.Activity;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.view.Display;
-import android.util.DisplayMetrics;
-import android.widget.TextView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Toast;
 
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
@@ -45,7 +39,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     private SensorGraph sgraph;
     private FFTGraph fftgraph;
     public static int fsize=32;
-    public static CircularFifoQueue<Double> mag = new CircularFifoQueue<Double>(64);
+    //Creating an initial buffer for the magnitude values
+    public static CircularFifoQueue<Double> mag = new CircularFifoQueue<Double>(32);
+    //States of user activities
     public static int state = 0, oldstate = 0;
     NotificationCompat.Builder mBuilder;
     NotificationManager mNotificationManager;
@@ -62,18 +58,17 @@ public class MainActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_main);
         initializeVariables();
 
-
+        //Checking if we have an accelerometer in our phone and if yes, initializing it.
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
-            // Success! There's a accelerometer.
             mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         } else {
-            // Failure! No accelerometer.
+            Toast.makeText(getApplicationContext(), "No accelerometer found", Toast.LENGTH_SHORT).show();
         }
 
-
+        //Creating an ongoing notification, with initial values, which will be later updated
          mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.sand)
@@ -85,16 +80,15 @@ public class MainActivity extends Activity implements SensorEventListener {
         mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // mId allows you to update the notification later on.
         mNotificationManager.notify(mId, mBuilder.build());
 
 
 
 
 
-
+        //User touched the seekbar for live accelerometer data visualization
         sb_sensor.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-            int progress = 0;
+            int progress = 50;
 
 
             @Override
@@ -115,13 +109,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         });
 
+        //User touched the seekbar for the FFT transformation visualization
         sb_fft.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-            int progress = 6;
+            int progress = 5;
 
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 fsize = (int)Math.pow(2,progress);
+                //Updating the size of magnitude values buffer
                 mag = new CircularFifoQueue<Double>(fsize);
             }
 
@@ -153,6 +149,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
 
         //accelerometer visualization
+        //Updating the color bars on the custom view with live accelerometer visualization
         sgraph.x1=event.values[0];
         sgraph.x2=event.values[1];
         sgraph.x3=event.values[2];
@@ -161,9 +158,11 @@ public class MainActivity extends Activity implements SensorEventListener {
         sgraph.invalidate();
 
         //fft
+        //Adding magnitude values to the buffer
         mag.add(magnitude);
         fftgraph.invalidate();
 
+        //Updating the text and the icon of the notification if the user's activity is changed
         if(state!=oldstate) {
             if (state == 1) {
                 mBuilder.setContentText("You are sitting");

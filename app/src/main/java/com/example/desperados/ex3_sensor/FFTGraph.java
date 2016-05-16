@@ -1,6 +1,5 @@
 package com.example.desperados.ex3_sensor;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,8 +7,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
-import android.content.Context;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
@@ -33,10 +30,6 @@ public class FFTGraph extends View {
     public FFTGraph(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupPaint();
-
-
-
-
     }
 
     @Override
@@ -50,6 +43,7 @@ public class FFTGraph extends View {
 
         canvas.drawARGB(255, 173, 216, 230);
 
+        //When the buffer for the sensor values is full,...
         if (buffer >= size) {
 
             canvas.drawText("Window Size: "+size, center, 100, textPaint);
@@ -65,9 +59,10 @@ public class FFTGraph extends View {
                 re[i] = MainActivity.mag.get(i);
                 im[i] = 0;
              }
-
+            //...performing fast fourier transform
             fft.fft(re, im);
             for (int i = 0; i < size; i++) {
+                //Getting the magnitude
                 res[i] = Math.sqrt(Math.pow(re[i], 2) + Math.pow(im[i], 2));
                 sum = sum + res[i];
                 if(res[i]>maximum)
@@ -75,18 +70,20 @@ public class FFTGraph extends View {
                 if(i > 0)
                 canvas.drawLine((i-1)*step,height-(float)res[i-1],i*step,height-(float)res[i],drawPaint);
             }
+            //Calculating the average value for this transformation
             average = sum / size;
-            //Log.i("average",""+average);
-           // Log.i("maximum",""+maximum);
+            //Storing the average value in the buffer
             av.add(average);
             max.add(maximum);
 
 
         }
+        //When the application is started, or the user changed the size of FFT window, it takes time to fill the buffer
         else {
             canvas.drawText("Filling the buffer for FFT",step, 100, textPaint);
         }
 
+        //When the buffer of average values from FFT is full, calculating the averages, and...
         if(av.size()==100){
             double sum1 = 0;
             double max1 = 0;
@@ -102,11 +99,12 @@ public class FFTGraph extends View {
             Log.i("Average of Averages",""+av1);
             Log.i("Max of max",""+max1);
 
-            if(av1<=12){
+            //... identifying which activity is user currently doing
+            if(av1<=15){
                 Log.i("Sit",""+1);
             MainActivity.state = 1;
             }
-            else if(av1>12&&av1<20){
+            else if(av1>15&&av1<20){
                 Log.i("Walk",""+2);
             MainActivity.state = 2;
             }
@@ -121,7 +119,7 @@ public class FFTGraph extends View {
     }
 
 
-
+    //Setting up paints for line drawing and texts
     private void setupPaint() {
         drawPaint = new Paint();
         drawPaint.setColor(paintColor);

@@ -7,9 +7,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-
-
-
 /**
  * Created by Dest 0 on 13/05/2016.
  */
@@ -22,19 +19,14 @@ public class SensorGraph extends View{
     private Paint drawPaint, textPaint;
     public float x1, x2, x3, x4;
 
-
-
     public SensorGraph(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupPaint();
-
-
-
-
     }
 
 
     @Override
+    //Drawing the color bars according to the accelerometer data
     protected void onDraw(Canvas canvas) {
 
 
@@ -55,8 +47,7 @@ public class SensorGraph extends View{
 
     }
 
-
-    // Setup paint with color and stroke styles
+    // Setting up paints for line drawing and text
     private void setupPaint() {
         drawPaint = new Paint();
         drawPaint.setColor(paintColor);
