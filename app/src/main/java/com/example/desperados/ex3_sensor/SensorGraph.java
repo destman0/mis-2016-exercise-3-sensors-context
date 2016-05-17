@@ -24,12 +24,9 @@ public class SensorGraph extends View{
         setupPaint();
     }
 
-
     @Override
     //Drawing the color bars according to the accelerometer data
     protected void onDraw(Canvas canvas) {
-
-
         float xcent = canvas.getWidth()/2;
         canvas.drawARGB(255, 0, 0, 0);
         drawPaint.setColor(Color.RED);
@@ -44,7 +41,6 @@ public class SensorGraph extends View{
         drawPaint.setColor(Color.WHITE);
         canvas.drawText("Magnitude:", 10, 400, textPaint);
         canvas.drawLine(xcent,400,xcent+x4*10,400,drawPaint);
-
     }
 
     // Setting up paints for line drawing and text
@@ -59,10 +55,7 @@ public class SensorGraph extends View{
 
         textPaint = new Paint();
         textPaint.setColor(textColor);
-        textPaint.setTextSize(50);
-
-
-
+        textPaint.setTextSize(40);
     }
 
 }

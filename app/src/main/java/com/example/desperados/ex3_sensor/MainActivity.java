@@ -48,10 +48,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     int mId = 001;
 
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,14 +95,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 progress = progressValue;
             }
-
         });
 
         //User touched the seekbar for the FFT transformation visualization
@@ -130,12 +124,8 @@ public class MainActivity extends Activity implements SensorEventListener {
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 progress = progressValue;
             }
-
         });
-
     }
-
-
 
 
     @Override
@@ -145,7 +135,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     @Override
     public final void onSensorChanged(SensorEvent event) {
-
 
 
         //accelerometer visualization
@@ -199,7 +188,12 @@ public class MainActivity extends Activity implements SensorEventListener {
         mSensorManager.unregisterListener(this);
     }
 
-
+    //Removing the notification, if the user exits the application
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mNotificationManager.cancel(mId);
+    }
 
     private void initializeVariables() {
         sb_sensor = (SeekBar) findViewById(R.id.sb_sensor);

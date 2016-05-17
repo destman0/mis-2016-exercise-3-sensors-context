@@ -21,11 +21,6 @@ public class FFTGraph extends View {
     private Paint drawPaint, textPaint;
     FFT fft;
     public static CircularFifoQueue<Double> av = new CircularFifoQueue<Double>(100);
-    public static CircularFifoQueue<Double> max = new CircularFifoQueue<Double>(100);
-
-
-
-
 
     public FFTGraph(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -47,7 +42,6 @@ public class FFTGraph extends View {
         if (buffer >= size) {
 
             canvas.drawText("Window Size: "+size, center, 100, textPaint);
-            canvas.drawText(""+size, center, 150, textPaint);
             fft = new FFT(size);
             double re[] = new double[size];
             double im[] = new double[size];
@@ -75,9 +69,6 @@ public class FFTGraph extends View {
             average = sum / size;
             //Storing the average value in the buffer
             av.add(average);
-            max.add(maximum);
-
-
         }
         //When the application is started, or the user changed the size of FFT window, it takes time to fill the buffer
         else {
@@ -85,23 +76,20 @@ public class FFTGraph extends View {
             canvas.drawText("Please wait...",step, 150, textPaint);
         }
 
-        //When the buffer of average values from FFT is full, calculating the averages, and...
+        //When the buffer of average values from FFT is full, calculating the average magnitude, and...
         if(av.size()==100){
             double sum1 = 0;
-            double max1 = 0;
             double av1;
             for (int i = 1; i<100; i++) {
                 sum1 = sum1 + av.get(i);
-                if(av.get(i)>max1)
-                    max1 = av.get(i);
             }
             av1 = sum1/100;
             av.clear();
-            max.clear();
             Log.i("Average of Averages",""+av1);
-            Log.i("Max of max",""+max1);
-
             //... identifying which activity is user currently doing
+            //Here we compare the the average value of the magnitude over time with certain thresholds.
+            //The thresholds were determined experimentally for 3 activities: sitting, walking and running.
+            //For the activity recognition only FFT-transformed data from the accelerometer sensor is used.
             if(av1<=15){
                 Log.i("Sit",""+1);
             MainActivity.state = 1;
@@ -114,12 +102,8 @@ public class FFTGraph extends View {
                 Log.i("Run",""+3);
             MainActivity.state = 3;
             }
-
         }
-
-
     }
-
 
     //Setting up paints for line drawing and texts
     private void setupPaint() {
@@ -134,8 +118,5 @@ public class FFTGraph extends View {
         textPaint = new Paint();
         textPaint.setColor(textColor);
         textPaint.setTextSize(40);
-
     }
-
-
 }
